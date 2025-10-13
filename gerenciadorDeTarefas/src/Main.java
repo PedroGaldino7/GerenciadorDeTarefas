@@ -1,6 +1,8 @@
 //javac -encoding UTF-8 -d bin src/*.java   || pra compilar
 //java -cp bin Main     || pra rodar
 
+//Ou colocar o executar.bat e rodar
+
 import java.util.Scanner;
 
 public class Main {
@@ -46,9 +48,16 @@ public class Main {
 
                 case 2:
                 limparTela();
+                    System.out.println("=== LISTA DE TAREFAS ===");
+                    if (gerenciador.getTarefas().isEmpty()) {
+                        System.out.println("Nenhuma tarefa cadastrada.");
+                        pausa(sc);
+                        break;
+                    }else{
                     gerenciador.listarTarefas();
                     pausa(sc);
                     break;
+                }
 
                 case 3:
                 limparTela();
@@ -63,26 +72,32 @@ public class Main {
                         gerenciador.marcarComoConcluida(indiceConcluir);
                         System.out.println("\nTarefa marcada como concluída!");
                         pausa(sc);
+                        break;
                     }
-                    break;
 
                 case 4:
                 limparTela();
                     gerenciador.listarTarefas();
-                    System.out.print("Número da tarefa para remover: ");
-                    int indiceRemover = sc.nextInt() - 1;
-                    gerenciador.removerTarefa(indiceRemover);
-                    System.out.println("\nTarefa removida com sucesso!");
-                    pausa(sc);
-                    break;
+                    if (gerenciador.getTarefas().isEmpty()) {
+                        System.out.println("Nenhuma tarefa para remover.");
+                        pausa(sc);
+                    }else{
+                        System.out.print("Número da tarefa para remover: ");
+                        int indiceRemover = sc.nextInt() - 1;
+                        gerenciador.removerTarefa(indiceRemover);
+                        System.out.println("\nTarefa removida com sucesso!");
+                        pausa(sc);
+                        break;
+                    }
 
                 case 0:
                 limparTela();
                     System.out.println("Encerrando...");
                     break;
-
+                    
                 default:
                     System.out.println("Opção inválida!");
+                    pausa(sc);
             }
 
         } while (opcao != 0);
