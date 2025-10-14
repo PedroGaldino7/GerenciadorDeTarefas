@@ -56,8 +56,8 @@ public class Main {
                     }else{
                     gerenciador.listarTarefas();
                     pausa(sc);
-                    break;
                 }
+                break;
 
                 case 3:
                 limparTela();
@@ -66,14 +66,21 @@ public class Main {
                         System.out.println("Nenhuma tarefa para marcar como concluída.");
                         pausa(sc);
                         break;
+                    }
+                    else if (gerenciador.getTarefas().stream().allMatch(Tarefa::isConcluida)) {
+                        System.out.println("Todas as tarefas já estão concluídas.");
+                        pausa(sc);
+                        break;
+
                     }else{
                         System.out.print("Número da tarefa para marcar como concluída: ");
                         int indiceConcluir = sc.nextInt() - 1;
                         gerenciador.marcarComoConcluida(indiceConcluir);
                         System.out.println("\nTarefa marcada como concluída!");
+                        sc.nextLine();
                         pausa(sc);
-                        break;
                     }
+                    break;
 
                 case 4:
                 limparTela();
@@ -81,14 +88,16 @@ public class Main {
                     if (gerenciador.getTarefas().isEmpty()) {
                         System.out.println("Nenhuma tarefa para remover.");
                         pausa(sc);
+                        break;
                     }else{
-                        System.out.print("Número da tarefa para remover: ");
+                        System.out.print("\nNúmero da tarefa para remover: ");
                         int indiceRemover = sc.nextInt() - 1;
                         gerenciador.removerTarefa(indiceRemover);
                         System.out.println("\nTarefa removida com sucesso!");
+                        sc.nextLine();
                         pausa(sc);
-                        break;
                     }
+                    break;
 
                 case 0:
                 limparTela();
@@ -97,10 +106,12 @@ public class Main {
                     
                 default:
                     System.out.println("Opção inválida!");
+                    sc.nextLine();
                     pausa(sc);
             }
 
         } while (opcao != 0);
+
         sc.close();
     }
 }
