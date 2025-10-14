@@ -3,6 +3,7 @@
 
 //Ou colocar o executar.bat e rodar
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -21,6 +22,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         GerenciadorTarefas gerenciador = new GerenciadorTarefas();
+        gerenciador.carregarDoArquivo();
 
         int opcao;
 
@@ -36,6 +38,7 @@ public class Main {
             opcao = sc.nextInt();
             sc.nextLine();
 
+            try {
             switch (opcao) {
                 case 1:
                 limparTela();
@@ -43,6 +46,7 @@ public class Main {
                     String descricao = sc.nextLine();
                     gerenciador.adicionarTarefa(descricao);
                     System.out.println("\nTarefa adicionada com sucesso!");
+                    gerenciador.salvarTarefasEmArquivo();
                     pausa(sc);
                     break;
 
@@ -53,9 +57,64 @@ public class Main {
                         System.out.println("Nenhuma tarefa cadastrada.");
                         pausa(sc);
                         break;
+
                     }else{
-                    gerenciador.listarTarefas();
-                    pausa(sc);
+                        System.out.println("1. Tarefas Pendentes:");
+                        System.out.println("2. Tarefas Concluídas:");
+                        System.out.println("0. Sair");
+                        System.out.println("Escolha uma opção: ");
+                        int tafOpcao = sc.nextInt();
+                        sc.nextLine();
+
+                        try {
+                            
+                            switch (tafOpcao) {
+                            case 1:
+                                limparTela();
+                                    System.out.println("=== TAREFAS PENDENTES ===");
+                                    if (gerenciador.getPendentes().isEmpty()) {
+                                        System.out.println("Nenhuma tarefa pendente.");
+                                        pausa(sc);
+                                        break;
+                                    }else{
+                                        for (Tarefa t : gerenciador.getPendentes()) {
+                                            System.out.println("- " + t);
+                                        }
+                                        pausa(sc);
+                                    }
+                                break;
+                        
+                            case 2:
+                                limparTela();
+                                    System.out.println("=== TAREFAS CONCLUÍDAS ===");
+                                    if (gerenciador.getConcluidas().isEmpty()) {
+                                        System.out.println("Nenhuma tarefa concluída.");
+                                        pausa(sc);
+                                        break;
+                                    }else{
+                                        for (Tarefa t : gerenciador.getConcluidas()) {
+                                            System.out.println("- " + t);
+                                        }
+                                        pausa(sc);
+                                    }
+                                break;
+
+                            case 0:
+                                System.out.println("\nVoltando ao menu principal...");
+                                pausa(sc);
+                                break;
+
+                            default:
+                                System.out.println("Opção inválida!");
+                                sc.nextLine();
+                                pausa(sc);
+                                break;
+                        }
+
+                        } catch (InputMismatchException e) {
+                        System.out.println("Entrada inválida! Digite apenas números.");
+                        sc.nextLine();
+                            }
                 }
                 break;
 
@@ -76,7 +135,7 @@ public class Main {
                         System.out.print("Número da tarefa para marcar como concluída: ");
                         int indiceConcluir = sc.nextInt() - 1;
                         gerenciador.marcarComoConcluida(indiceConcluir);
-                        System.out.println("\nTarefa marcada como concluída!");
+                        gerenciador.salvarTarefasEmArquivo();
                         sc.nextLine();
                         pausa(sc);
                     }
@@ -89,11 +148,12 @@ public class Main {
                         System.out.println("Nenhuma tarefa para remover.");
                         pausa(sc);
                         break;
+
                     }else{
                         System.out.print("\nNúmero da tarefa para remover: ");
                         int indiceRemover = sc.nextInt() - 1;
-                        gerenciador.removerTarefa(indiceRemover);
-                        System.out.println("\nTarefa removida com sucesso!");
+                        gerenciador.excluirTarefaDeArquivo(indiceRemover);
+                        gerenciador.verificarArquivoVazio();
                         sc.nextLine();
                         pausa(sc);
                     }
@@ -106,9 +166,14 @@ public class Main {
                     
                 default:
                     System.out.println("Opção inválida!");
-                    sc.nextLine();
                     pausa(sc);
             }
+                
+            }catch (InputMismatchException e) {
+            System.out.println("Entrada inválida! Digite apenas números.");
+            sc.nextLine();
+        }
+
 
         } while (opcao != 0);
 
