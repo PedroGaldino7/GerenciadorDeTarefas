@@ -1,6 +1,5 @@
 //Aqui vai ficar a parte do CRUD de tarefas
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
